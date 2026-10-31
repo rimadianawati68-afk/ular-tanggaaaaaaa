@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ular Tangga Sosiologi Kelas X Fase E - Gejala Sosial</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --font-display: 'Fredoka', sans-serif;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+        }
+        body {
+            font-family: var(--font-sans);
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a 60%, #020617);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .font-board {
+            font-family: var(--font-display);
+        }
+        /* Number styling matching the reference board */
+        .tile-num-solid {
+            font-family: var(--font-display);
+            color: #ffffff;
+            font-weight: 700;
+            line-height: 1;
+            text-shadow: 0 2px 3px rgba(0, 0, 0, 0.28);
+            user-select: none;
+        }
+        .tile-num-outline {
+            font-family: var(--font-display);
+            color: #ffffff;
+            font-weight: 700;
+            line-height: 1;
+            -webkit-text-stroke: 2.2px #b45309;
+            paint-order: stroke fill;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            user-select: none;
+        }
+        /* 3D Dice Animation */
+        @keyframes diceShake {
+            0%, 100% { transform: rotate(0deg) scale(1); }
+            20% { transform: rotate(-18deg) scale(1.12); }
+            40% { transform: rotate(18deg) scale(1.15); }
+            60% { transform: rotate(-14deg) scale(1.12); }
+            80% { transform: rotate(14deg) scale(1.08); }
+        }
+        .dice-rolling {
+            animation: diceShake 0.45s infinite ease-in-out;
+        }
+        /* Token bounce animation */
+        @keyframes tokenHop {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-16px) scale(1.22); }
+        }
+        .token-hopping {
+            animation: tokenHop 0.28s ease-in-out;
+        }
+        /* Pulse highlight for active player token */
+        @keyframes activeRing {
+            0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.85); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+        }
+        .token-active {
+            animation: activeRing 1.6s infinite;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.6);
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(99, 102, 241, 0.9);
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500 selection:text-white">
+
+    <header class="sticky top-0 z-30 backdrop-blur-md bg-slate-900/85 border-b border-slate-700/70 px-3 sm:px-6 py-2.5">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 via-pink-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-pink-500/20 border border-white/20">
+                    <i class="fa-solid fa-dice text-white text-xl"></i>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h1 class="font-board text-lg sm:text-xl tracking-wide text-white">ULAR TANGGA SOSIOLOGI</h1>
+                        <span class="hidden sm:inline-block text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-400/30">Kelas X • Fase E</span>
+                    </div>
+                    <p class="text-xs text-slate-300">Materi: <strong class="text-amber-300">Gejala Sosial di Masyarakat</strong> (Kurikulum Merdeka)</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                <button onclick="openModal('promptModal')" class="px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold text-xs sm:text-sm shadow-md shadow-amber-500/20 flex items-center gap-1.5 transition active:scale-95">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>Master Prompt (Gemini/Argon)</span>
+                </button>
+                <button onclick="openModal('materiModal')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600/80 font-semibold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95">
+                    <i class="fa-solid fa-book-open text-emerald-400"></i>
+                    <span class="hidden md:inline">Ringkasan</span> Materi
+                </button>
+                <button onclick="openModal('setupModal')" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 border border-slate-600/80 font-semibold text-xs sm:text-sm flex items-center gap-1.5 transition active:scale-95">
+                    <i class="fa-solid fa-Sliders text-sky-400"></i>
+                    <span>Atur Tim</span>
+                </button>
+                <button id="soundToggleBtn" onclick="toggleSound()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600/80 flex items-center justify-center transition active:scale-95" title="Suara Efek">
+                    <i id="soundIcon" class="fa-solid fa-volume-high text-emerald-400"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-2 sm:px-6 py-4 grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+
+        <!-- LEFT / CENTER COLUMN: THE 6x6 SNAKES & LADDERS BOARD (MATCHING REFERENCE IMAGE) -->
+        <section class="lg:col-span-7 xl:col-span-7 flex flex-col items-center">
+            <!-- Board Frame -->
+            <div class="w-full max-w-[610px] bg-white p-2 sm:p-3 rounded-2xl shadow-2xl shadow-black/70 border-4 border-slate-200 relative">
+                
+                <!-- 6x6 Aspect-Square Container -->
+                <div id="boardContainer" class="relative w-full aspect-square rounded-lg overflow-hidden border-2 border-white select-none shadow-inner">
+                    
+                    <!-- 1) Background 36 Tiles Grid -->
+                    <div id="tilesGrid" class="w-full h-full grid grid-cols-6 grid-rows-6"></div>
+
+                    <!-- 2) SVG Overlay for Authentic Wooden Ladders & Cartoon Snakes (Matching Reference Image) -->
+                    <svg id="boardSvgOverlay" viewBox="0 0 600 600" class="absolute inset-0 w-full h-full pointer-events-none z-10" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <!-- Drop shadow for ladders and snakes -->
+                            <filter id="dropShadow" x="-15%" y="-15%" width="130%" height="130%">
+                                <feDropShadow dx="2" dy="4" stdDeviation="3" flood-color="#000000" flood-opacity="0.38"/>
+                            </filter>
+                            <!-- Wood gradient for ladders -->
+                            <linearGradient id="woodRail" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#a46b2c"/>
+                                <stop offset="50%" stop-color="#c98a42"/>
+                                <stop offset="100%" stop-color="#8c5820"/>
+                            </linearGradient>
+                            <linearGradient id="woodRung" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#d2954d"/>
+                                <stop offset="100%" stop-color="#965f24"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- ================= 5 WOODEN LADDERS (TANGGA) ================= -->
+                        <!-- TANGGA 1: Tile 6 (550,550) -> Tile 18 (550,350) -->
+                        <g filter="url(#dropShadow)">
+                            <line x1="528" y1="560" x2="546" y2="358" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <line x1="564" y1="564" x2="582" y2="362" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Rungs -->
+                            <line x1="524" y1="542" x2="569" y2="546" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="527" y1="514" x2="572" y2="518" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="529" y1="486" x2="574" y2="490" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="532" y1="458" x2="577" y2="462" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="535" y1="430" x2="580" y2="434" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="537" y1="402" x2="582" y2="406" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="540" y1="374" x2="585" y2="378" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- TANGGA 2: Tile 11 (150,450) -> Tile 14 (150,350) -->
+                        <g filter="url(#dropShadow)">
+                            <line x1="150" y1="482" x2="136" y2="352" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <line x1="186" y1="478" x2="172" y2="348" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Rungs -->
+                            <line x1="143" y1="464" x2="191" y2="459" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="140" y1="436" x2="188" y2="431" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="137" y1="408" x2="185" y2="403" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="134" y1="380" x2="182" y2="375" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- TANGGA 3: Tile 15 (250,350) -> Tile 22 (250,250) -->
+                        <g filter="url(#dropShadow)">
+                            <line x1="220" y1="348" x2="248" y2="255" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <line x1="254" y1="358" x2="282" y2="265" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Rungs -->
+                            <line x1="219" y1="333" x2="263" y2="346" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="227" y1="307" x2="271" y2="320" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="235" y1="281" x2="279" y2="294" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- TANGGA 4: Tile 21 (350,250) -> Tile 28 (350,150) -->
+                        <g filter="url(#dropShadow)">
+                            <line x1="318" y1="258" x2="346" y2="150" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <line x1="352" y1="268" x2="380" y2="160" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Rungs -->
+                            <line x1="316" y1="242" x2="360" y2="254" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="323" y1="215" x2="367" y2="227" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="330" y1="188" x2="374" y2="200" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="337" y1="162" x2="381" y2="174" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- TANGGA 5 (Long Ladder): Tile 23 (150,250) -> Tile 35 (150,50) -->
+                        <g filter="url(#dropShadow)">
+                            <line x1="154" y1="278" x2="128" y2="58" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <line x1="190" y1="274" x2="164" y2="54" stroke="url(#woodRail)" stroke-width="8" stroke-linecap="round"/>
+                            <!-- Rungs -->
+                            <line x1="147" y1="256" x2="195" y2="251" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="144" y1="229" x2="192" y2="224" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="141" y1="202" x2="189" y2="197" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="138" y1="175" x2="186" y2="170" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="135" y1="148" x2="183" y2="143" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="132" y1="121" x2="180" y2="116" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="129" y1="94" x2="177" y2="89" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                            <line x1="126" y1="68" x2="174" y2="63" stroke="url(#woodRung)" stroke-width="6" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- ================= 5 CARTOON SNAKES (ULAR) ================= -->
+
+                        <!-- ULAR 1 (Red-Orange Coral Snake on Left): Head at 25 (48,175) -> Tail at 12 (52,448) -->
+                        <g filter="url(#dropShadow)">
+                            <!-- Forked Tongue -->
+                            <path d="M 48 158 L 48 145 L 43 139 M 48 145 L 53 139" stroke="#e11d48" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <!-- Main Body Base -->
+                            <path d="M 48 175 C 48 215, 86 225, 78 265 C 70 305, 42 315, 52 355 C 62 395, 85 402, 52 448" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+                            <!-- Red & Black/White Coral Bands -->
+                            <path d="M 48 175 C 48 215, 86 225, 78 265 C 70 305, 42 315, 52 355 C 62 395, 85 402, 52 448" stroke="#ef4444" stroke-width="15" stroke-dasharray="16 14" fill="none" stroke-linecap="butt"/>
+                            <path d="M 48 175 C 48 215, 86 225, 78 265 C 70 305, 42 315, 52 355 C 62 395, 85 402, 52 448" stroke="#1e293b" stroke-width="15" stroke-dasharray="4 26" fill="none" stroke-linecap="butt"/>
+                            <path d="M 48 175 C 48 215, 86 225, 78 265 C 70 305, 42 315, 52 355 C 62 395, 85 402, 52 448" stroke="#ffffff" stroke-width="15" stroke-dasharray="2 28" fill="none" stroke-linecap="butt"/>
+                            <!-- Snake Head -->
+                            <ellipse cx="48" cy="174" rx="14" ry="17" fill="#ef4444"/>
+                            <!-- Googly Eyes -->
+                            <circle cx="41" cy="167" r="6" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="55" cy="167" r="6" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="41" cy="167" r="2.8" fill="#0f172a"/>
+                            <circle cx="55" cy="167" r="2.8" fill="#0f172a"/>
+                        </g>
+
+                        <!-- ULAR 2 (Green Spotted Snake Top-Center): Head at 34 (248,66) -> Tail at 22 (262,242) -->
+                        <g filter="url(#dropShadow)">
+                            <path d="M 248 48 L 248 36 L 243 31 M 248 36 L 253 31" stroke="#e11d48" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M 248 68 C 252 108, 222 135, 232 172 C 242 205, 268 212, 262 242" stroke="#65a30d" stroke-width="16" fill="none" stroke-linecap="round"/>
+                            <path d="M 248 68 C 252 108, 222 135, 232 172 C 242 205, 268 212, 262 242" stroke="#bef264" stroke-width="10" stroke-dasharray="3 18" fill="none" stroke-linecap="round"/>
+                            <ellipse cx="248" cy="66" rx="13" ry="16" fill="#65a30d"/>
+                            <circle cx="242" cy="60" r="5.5" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="254" cy="60" r="5.5" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="242" cy="60" r="2.5" fill="#0f172a"/>
+                            <circle cx="254" cy="60" r="2.5" fill="#0f172a"/>
+                        </g>
+
+                        <!-- ULAR 3 (Bright Green Snake Bottom-Center): Head at 16 (338,386) -> Tail across 4 & 3 (192,542) -->
+                        <g filter="url(#dropShadow)">
+                            <path d="M 338 366 L 338 353 L 333 347 M 338 353 L 343 347" stroke="#e11d48" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M 338 388 C 345 425, 310 448, 322 480 C 335 512, 368 530, 335 545 C 295 562, 245 532, 192 542" stroke="#4ade80" stroke-width="18" fill="none" stroke-linecap="round"/>
+                            <path d="M 338 388 C 345 425, 310 448, 322 480 C 335 512, 368 530, 335 545 C 295 562, 245 532, 192 542" stroke="#16a34a" stroke-width="18" stroke-dasharray="0 22" fill="none" stroke-linecap="round"/>
+                            <path d="M 338 388 C 345 425, 310 448, 322 480 C 335 512, 368 530, 335 545 C 295 562, 245 532, 192 542" stroke="#bbf7d0" stroke-width="8" stroke-dasharray="2 20" fill="none" stroke-linecap="round"/>
+                            <ellipse cx="338" cy="386" rx="14" ry="18" fill="#4ade80" stroke="#16a34a" stroke-width="2"/>
+                            <circle cx="331" cy="380" r="6" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="345" cy="380" r="6" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="331" cy="380" r="2.8" fill="#0f172a"/>
+                            <circle cx="345" cy="380" r="2.8" fill="#0f172a"/>
+                        </g>
+
+                        <!-- ULAR 4 (Olive-Yellow Spotted Snake Column 5): Head at 20 (458,296) -> Tail at 5 (442,516) -->
+                        <g filter="url(#dropShadow)">
+                            <path d="M 458 276 L 458 264 L 453 258 M 458 264 L 463 258" stroke="#e11d48" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M 458 298 C 455 345, 488 378, 476 422 C 464 466, 438 478, 442 516" stroke="#65a30d" stroke-width="18" fill="none" stroke-linecap="round"/>
+                            <path d="M 458 298 C 455 345, 488 378, 476 422 C 464 466, 438 478, 442 516" stroke="#fde047" stroke-width="10" stroke-dasharray="3 19" fill="none" stroke-linecap="round"/>
+                            <ellipse cx="458" cy="296" rx="14" ry="17" fill="#65a30d"/>
+                            <circle cx="451" cy="290" r="6" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="465" cy="290" r="6" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="451" cy="290" r="2.8" fill="#0f172a"/>
+                            <circle cx="465" cy="290" r="2.8" fill="#0f172a"/>
+                        </g>
+
+                        <!-- ULAR 5 (Dark Green & Yellow Striped Snake Right): Head at 31 (558,92) -> Tail at 19/20 (450,236) -->
+                        <g filter="url(#dropShadow)">
+                            <path d="M 558 72 L 558 60 L 553 54 M 558 60 L 563 54" stroke="#e11d48" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M 558 95 C 562 135, 526 155, 548 188 C 568 218, 565 238, 522 238 C 488 238, 468 234, 450 236" stroke="#15803d" stroke-width="18" fill="none" stroke-linecap="round"/>
+                            <path d="M 558 95 C 562 135, 526 155, 548 188 C 568 218, 565 238, 522 238 C 488 238, 468 234, 450 236" stroke="#facc15" stroke-width="15" stroke-dasharray="10 12" fill="none" stroke-linecap="butt"/>
+                            <ellipse cx="558" cy="92" rx="14" ry="17" fill="#15803d"/>
+                            <circle cx="551" cy="86" r="5.5" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="565" cy="86" r="5.5" fill="#ffffff" stroke="#1e293b" stroke-width="1.5"/>
+                            <circle cx="551" cy="86" r="2.6" fill="#0f172a"/>
+                            <circle cx="565" cy="86" r="2.6" fill="#0f172a"/>
+                        </g>
+                    </svg>
+
+                    <!-- 3) Dynamic Player Tokens Layer -->
+                    <div id="tokensLayer" class="absolute inset-0 pointer-events-none z-20"></div>
+                </div>
+
+                <!-- Board Legend Bar -->
+                <div class="mt-2.5 px-2 py-1.5 bg-slate-900 text-slate-200 rounded-xl flex flex-wrap items-center justify-between gap-2 text-xs">
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <span class="flex items-center gap-1.5 font-semibold text-amber-300">
+                            <i class="fa-solid fa-stairs"></i> Tangga (Gejala Positif):
+                            <span class="text-slate-300 font-normal">6→18, 11→14, 15→22, 21→28, 23→35</span>
+                        </span>
+                        <span class="flex items-center gap-1.5 font-semibold text-rose-400">
+                            <i class="fa-solid fa-worm"></i> Ular (Masalah Sosial):
+                            <span class="text-slate-300 font-normal">16→3, 20→5, 25→12, 31→19, 34→22</span>
+                        </span>
+                    </div>
+                    <span class="text-[11px] text-slate-400 italic">Klik petak mana saja untuk info sosiologis</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="lg:col-span-5 xl:col-span-5 flex flex-col gap-4">
+
+            <!-- TURN & DICE CONTROLLER CARD -->
+            <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
+                <div class="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-400 block">Giliran Bermain</span>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span id="currentTurnBadge" class="w-4 h-4 rounded-full bg-rose-500 inline-block ring-2 ring-white"></span>
+                            <h2 id="currentTurnName" class="font-board text-xl sm:text-2xl text-white">Kelompok Durkheim</h2>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs text-slate-400 block">Mode Aturan</span>
+                        <button onclick="toggleRuleMode()" id="ruleModeBadge" class="mt-1 px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 text-xs font-semibold transition">
+                            <i class="fa-solid fa-shield-halved mr-1"></i> Mode Edukasi (Aktif)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Dice Box & Roll Button -->
+                <div class="flex items-center gap-4 bg-slate-950/70 p-3.5 rounded-2xl border border-slate-800">
+                    <!-- Visual 3D-like SVG Dice -->
+                    <div id="diceVisual" class="w-20 h-20 rounded-2xl bg-gradient-to-br from-white to-slate-200 shadow-lg flex items-center justify-center border-2 border-slate-300 shrink-0">
+                        <!-- Rendered dynamically by JS -->
+                    </div>
+
+                    <div class="flex-1">
+                        <button id="rollDiceBtn" onclick="handleRollDice()" class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 hover:from-emerald-400 hover:to-cyan-500 text-slate-950 font-board text-lg sm:text-xl tracking-wide shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2.5 transition transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-dice-d6 text-xl"></i>
+                            <span id="rollBtnText">KOCOK DADU!</span>
+                        </button>
+                        <p id="turnStatusText" class="text-xs text-slate-300 mt-2 text-center">
+                            Klik tombol untuk melempar dadu & menjawab kuis Gejala Sosial.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PLAYERS / GROUPS SCOREBOARD -->
+            <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="font-board text-base sm:text-lg text-white flex items-center gap-2">
+                        <i class="fa-solid fa-users-viewfinder text-amber-400"></i>
+                        Klasemen Tim Sosiolog
+                    </h3>
+                    <button onclick="resetGameConfirm()" class="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1 px-2 py-1 rounded-lg hover:bg-rose-500/10 transition">
+                        <i class="fa-solid fa-rotate-right"></i> Reset Permainan
+                    </button>
+                </div>
+                <div id="playersList" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+
+            <!-- SOCIOLOGY PHENOMENON LOG & TILE INSPECTOR -->
+            <div class="bg-slate-900/90 border border-slate-700/80 rounded-2xl p-4 shadow-xl flex-1 flex flex-col">
+                <div class="flex items-center justify-between mb-2">
+                    <h3 class="font-board text-base text-white flex items-center gap-2">
+                        <i class="fa-solid fa-newspaper text-sky-400"></i>
+                        Jurnal Analisis Gejala Sosial
+                    </h3>
+                    <span id="quizStatsBadge" class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">
+                        Bank Soal: 25 HOTS
+                    </span>
+                </div>
+                <div id="gameLog" class="bg-slate-950/80 rounded-xl p-3 border border-slate-800/90 h-48 overflow-y-auto space-y-2 text-xs sm:text-sm">
+                    <!-- Log entries populated via JS -->
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <div id="quizModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5">
+        <div class="bg-slate-900 border-2 border-indigo-500/60 rounded-3xl max-w-2xl w-full p-5 sm:p-6 shadow-2xl relative animate-fadeIn max-h-[92vh] overflow-y-auto">
+            <!-- Header Badge -->
+            <div class="flex items-center justify-between gap-2 mb-3">
+                <span id="quizCategoryBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-400/40">
+                    Kuis Gejala Sosial
+                </span>
+                <span id="quizTileBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-slate-800 text-slate-300 border border-slate-700">
+                    Petak #15
+                </span>
+            </div>
+
+            <!-- Event Context Banner (When landing on Ladder or Snake) -->
+            <div id="quizEventBanner" class="mb-4 p-3.5 rounded-2xl bg-indigo-950/70 border border-indigo-500/40 flex items-start gap-3">
+                <div id="quizEventIcon" class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl shrink-0">
+                    <i class="fa-solid fa-stairs"></i>
+                </div>
+                <div class="text-xs sm:text-sm">
+                    <h4 id="quizEventTitle" class="font-bold text-white text-sm sm:text-base">Fenomena Tangga Sosial!</h4>
+                    <p id="quizEventDesc" class="text-slate-300 mt-0.5">Jawab pertanyaan dengan tepat untuk naik tangga dan memperoleh +20 Poin Sosiologi!</p>
+                </div>
+            </div>
+
+            <!-- Question Text -->
+            <div class="bg-slate-950/90 border border-slate-800 rounded-2xl p-4 mb-4">
+                <p id="quizQuestionText" class="text-sm sm:text-base text-slate-100 font-medium leading-relaxed">
+                    Pertanyaan sosiologi akan tampil di sini...
+                </p>
+            </div>
+
+            <!-- Answer Options -->
+            <div id="quizOptionsContainer" class="space-y-2.5 mb-4">
+                <!-- Populated dynamically -->
+            </div>
+
+            <!-- Feedback & Sociological Explanation Box (Hidden until answered) -->
+            <div id="quizFeedbackBox" class="hidden rounded-2xl p-4 mb-4 border">
+                <div class="flex items-center gap-2 font-bold text-sm sm:text-base mb-1" id="quizFeedbackTitle"></div>
+                <p id="quizExplanationText" class="text-xs sm:text-sm text-slate-200 leading-relaxed"></p>
+            </div>
+
+            <!-- Continue Button -->
+            <div class="flex justify-end">
+                <button id="quizContinueBtn" onclick="closeQuizAndProceed()" class="hidden px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-400 hover:to-purple-500 text-white font-bold text-sm shadow-lg transition">
+                    Lanjutkan Permainan <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="promptModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5">
+        <div class="bg-slate-900 border-2 border-amber-500/60 rounded-3xl max-w-4xl w-full p-5 sm:p-6 shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300">
+                        <i class="fa-solid fa-terminal"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-board text-lg sm:text-xl text-white">Master Prompt: Game Ular Tangga Sosiologi (Gemini / Argon Canvas)</h3>
+                        <p class="text-xs text-slate-400">Salin prompt terstruktur di bawah ini untuk diterapkan atau dikembangkan lebih lanjut pada Canvas Gemini / Argon.</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('promptModal')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="my-3 flex-1 overflow-y-auto bg-slate-950 border border-slate-800 rounded-2xl p-4 font-mono text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-wrap" id="masterPromptText">PERAN & TUJUAN UTAMA:
+Bertindaklah sebagai Senior EdTech Game Developer dan Guru Ahli Sosiologi SMA. Buatkan aplikasi Web Game Interaktif "Ular Tangga Sosiologi Kelas X Fase E - Materi Gejala Sosial" dalam SATU file HTML lengkap (Single-File HTML5, Tailwind CSS, Vanilla JS, dan Inline SVG) yang siap dijalankan langsung pada fitur Canvas (Gemini / Argon).
+
+SPESIFIKASI VISUAL PAPAN PERMAINAN (REPLIKASI PRESISI PAPAN 6x6):
+1. Struktur Grid:
+   - Papan berukuran 6x6 (Total 36 Kotak) dengan rasio 1:1 (persegi) dan garis batas antar kotak berwarna putih tegas.
+   - Alur penomoran zig-zag (boustrophedon) dimulai dari kiri bawah (Kotak 1 "Start" dengan panah ke kanan) menuju kanan (1-6), naik ke baris kedua dari kanan ke kiri (7-12), baris ketiga kiri ke kanan (13-18), baris keempat kanan ke kiri (19-24), baris kelima kiri ke kanan (25-30), dan baris keenam kanan ke kiri (31-36, dengan Kotak 36 bertuliskan "Finish" dan panah ke kiri).
+2. Palet Warna Eksak Setiap Petak:
+   - Baris 1 (Bawah, 1-6): 1=Hijau (#8cc63f), 2=Biru Muda (#00a6e2), 3=Biru Tua (#0072bc), 4=Ungu (#662d91), 5=Magenta (#d91c82), 6=Merah (#ed1c24).
+   - Baris 2 (7-12): 7=Ungu (#662d91), 8=Hijau (#8cc63f), 9=Magenta (#d91c82), 10=Merah (#ed1c24), 11=Oranye (#f7941d), 12=Kuning (#fff200).
+   - Baris 3 (13-18): 13=Magenta (#d91c82), 14=Ungu (#662d91), 15=Biru Muda (#00a6e2), 16=Oranye (#f7941d), 17=Kuning (#fff200), 18=Magenta (#d91c82).
+   - Baris 4 (19-24): 19=Biru Tua (#0072bc), 20=Biru Muda (#00a6e2), 21=Kuning (#fff200), 22=Magenta (#d91c82), 23=Kuning (#fff200), 24=Hijau (#8cc63f).
+   - Baris 5 (25-30): 25=Biru Muda (#00a6e2), 26=Oranye (#f7941d), 27=Biru Tua (#0072bc), 28=Magenta (#d91c82), 29=Merah (#ed1c24), 30=Kuning (#fff200).
+   - Baris 6 (Atas, 31-36): 31=Ungu (#662d91), 32=Oranye (#f7941d), 33=Hijau (#8cc63f), 34=Biru Muda (#00a6e2), 35=Kuning (#fff200), 36=Magenta (#d91c82).
+3. Posisi Eksak 5 Tangga Kayu (SVG Overlay):
+   - Tangga 1: Kotak 6 naik ke Kotak 18
+   - Tangga 2: Kotak 11 naik ke Kotak 14
+   - Tangga 3: Kotak 15 naik ke Kotak 22
+   - Tangga 4: Kotak 21 naik ke Kotak 28
+   - Tangga 5: Kotak 23 naik ke Kotak 35
+4. Posisi Eksak 5 Ular Kartun Bermata & Berlidah Cabang (SVG Overlay):
+   - Ular 1 (Merah-Oranye Belang): Kepala di Kotak 25 turun ke Ekor di Kotak 12
+   - Ular 2 (Hijau Bintik Atas): Kepala di Kotak 34 turun ke Ekor di Kotak 22
+   - Ular 3 (Hijau Polkadot Bawah): Kepala di Kotak 16 turun melengkung ke Ekor di Kotak 3
+   - Ular 4 (Hijau-Kuning Bintik Kanan): Kepala di Kotak 20 turun ke Ekor di Kotak 5
+   - Ular 5 (Hijau Tua-Kuning Belang Kanan Atas): Kepala di Kotak 31 turun ke Ekor di Kotak 19
+
+INTEGRASI PEDAGOGIS SOSIOLOGI KELAS X FASE E (MATERI GEJALA SOSIAL):
+1. Filosofi Mekanika Permainan:
+   - Tangga merepresentasikan "Gejala Sosial Positif / Asosiatif & Pengendalian Sosial Konstruktif" (Gotong royong, filantropi sosial, literasi digital, toleransi multikultural, pemberdayaan komunitas).
+   - Ular merepresentasikan "Gejala Sosial Negatif / Masalah Sosial & Disorganisasi Sosial" (Kemiskinan struktural, kenakalan remaja, konsumerisme, hoaks/cybercrime, kesenjangan sosial).
+2. Mekanisme Kuis HOTS & Umpan Balik Pembahasan:
+   - Sediakan minimal 25 Bank Soal Pilihan Ganda (A, B, C, D) bertaraf HOTS mencakup: Pengertian & Karakteristik Gejala Sosial, Faktor Kultural vs Struktural, Jenis Gejala Sosial (Ekonomi, Budaya, Lingkungan, Psikologis), Contoh Gejala Sosial di Masyarakat Modern, Dampak, dan Upaya Mengatasinya.
+   - Dalam "Mode Edukasi Sosiologi":
+     a) Saat mendarat di kaki Tangga: Pemain wajib menjawab kuis. Jika BENAR, pion naik tangga (+20 poin). Jika SALAH, pion batal naik tangga.
+     b) Saat mendarat di kepala Ular: Pemain mendapat kuis "Mitigasi Masalah Sosial". Jika BENAR, pemain berhasil melakukan pengendalian sosial sehingga terhindar dari turun ular (+15 poin). Jika SALAH, pion meluncur turun ke ekor ular (-5 poin).
+   - Setiap selesai menjawab, tampilkan kotak "Pembahasan Sosiologis" secara jelas sebelum giliran berpindah.
+
+FITUR INTERAKTIF TAMBAHAN:
+- Dukungan 2 hingga 4 Kelompok Siswa (misal: Tim Durkheim, Tim Weber, Tim Marx, Tim Comte) dengan pion beranimasi lompat langkah-demi-langkah.
+- Dadu visual interaktif dengan animasi kocok dan efek suara berbasis Web Audio API (tanpa file audio eksternal).
+- Modul "Ringkasan Materi Gejala Sosial Fase E" dan "Jurnal Analisis Gejala Sosial" real-time.</div>
+
+            <div class="flex items-center justify-between gap-3 pt-2">
+                <span id="copyConfirmMsg" class="text-xs text-emerald-400 font-semibold opacity-0 transition">
+                    <i class="fa-solid fa-circle-check mr-1"></i> Prompt berhasil disalin ke Clipboard!
+                </span>
+                <div class="flex items-center gap-2">
+                    <button onclick="copyMasterPrompt()" class="px-5 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center gap-2 shadow-lg transition active:scale-95">
+                        <i class="fa-solid fa-copy"></i> Salin Master Prompt
+                    </button>
+                    <button onclick="closeModal('promptModal')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs sm:text-sm">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="materiModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5">
+        <div class="bg-slate-900 border-2 border-emerald-500/60 rounded-3xl max-w-4xl w-full p-5 sm:p-6 shadow-2xl max-h-[90vh] flex flex-col">
+            <div class="flex items-center justify-between gap-3 pb-3 border-b border-slate-800">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-emerald-300">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-board text-lg sm:text-xl text-white">Modul Ringkas: Gejala Sosial (Sosiologi Kelas X Fase E)</h3>
+                        <p class="text-xs text-slate-400">Panduan belajar cepat sebelum dan selama bermain Ular Tangga Sosiologi</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('materiModal')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="my-3 flex-1 overflow-y-auto space-y-4 pr-1 text-xs sm:text-sm text-slate-200">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl">
+                        <h4 class="font-bold text-amber-300 text-base mb-1.5"><i class="fa-solid fa-magnifying-glass-chart mr-1.5"></i>1. Pengertian & Karakteristik Gejala Sosial</h4>
+                        <p class="text-slate-300 leading-relaxed mb-2">
+                            <strong>Gejala Sosial</strong> adalah peristiwa-peristiwa yang terjadi di antara dan oleh manusia, baik secara individu maupun kelompok, yang memengaruhi pola interaksi dalam masyarakat.
+                        </p>
+                        <ul class="list-disc list-inside space-y-1 text-slate-300">
+                            <li><strong>Sangat Kompleks:</strong> Dipengaruhi faktor biologis, psikologis, budaya, ekonomi.</li>
+                            <li><strong>Beranekaragam:</strong> Memiliki sifat dan ciri yang berbeda-beda (ekonomi, politik, budaya).</li>
+                            <li><strong>Tidak Universal:</strong> Berbeda antara satu masyarakat dengan masyarakat lain (kontekstual).</li>
+                            <li><strong>Dinamis:</strong> Cepat berubah seiring perkembangan zaman.</li>
+                            <li><strong>Sulit Diprediksi & Kualitatif:</strong> Tidak mudah diukur hanya dengan angka eksak.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl">
+                        <h4 class="font-bold text-sky-300 text-base mb-1.5"><i class="fa-solid fa-sitemap mr-1.5"></i>2. Faktor Penyebab Gejala Sosial</h4>
+                        <div class="space-y-2.5 text-slate-300">
+                            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                                <strong class="text-white block">A. Faktor Kultural (Budaya)</strong>
+                                Nilai-nilai yang tumbuh dan berkembang di masyarakat/komunitas. Contoh: kemiskinan kultural (sikap pasrah), etos kerja tinggi, tradisi gotong royong, atau gaya hidup konsumtif.
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                                <strong class="text-white block">B. Faktor Struktural</strong>
+                                Suatu keadaan yang memengaruhi struktur sosial yang tersusun oleh pola-pola hubungan antarindividu/kelompok dan kebijakan institusi. Contoh: penyuluhan sosial, ketimpangan pembangunan, kebijakan ekonomi.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl">
+                        <h4 class="font-bold text-emerald-300 text-base mb-1.5"><i class="fa-solid fa-layer-group mr-1.5"></i>3. Klasifikasi Gejala Sosial (Pitirim A. Sorokin)</h4>
+                        <ul class="space-y-1.5 text-slate-300">
+                            <li><strong class="text-white">• Gejala Ekonomi:</strong> Kemiskinan, pengangguran, inflasi, kewirausahaan digital.</li>
+                            <li><strong class="text-white">• Gejala Budaya:</strong> Globalisasi, westernisasi, gegar budaya (<em>culture shock</em>), kearifan lokal.</li>
+                            <li><strong class="text-white">• Gejala Lingkungan Alam:</strong> Pencemaran lingkungan, banjir akibat alih fungsi lahan, wabah penyakit.</li>
+                            <li><strong class="text-white">• Gejala Psikologis:</strong> Stres sosial, krisis identitas remaja, fanatisme berlebihan.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-slate-950/80 border border-slate-800 p-4 rounded-2xl">
+                        <h4 class="font-bold text-rose-300 text-base mb-1.5"><i class="fa-solid fa-scale-balanced mr-1.5"></i>4. Dampak & Pengendalian Sosial</h4>
+                        <p class="text-slate-300 leading-relaxed mb-2">
+                            <strong>Dampak Positif (Tangga):</strong> Modernisasi, efisiensi komunikasi, kesetaraan gender, solidaritas sosial.<br>
+                            <strong>Dampak Negatif (Ular):</strong> Disorganisasi sosial, kriminalitas, kenakalan remaja, kesenjangan sosial.
+                        </p>
+                        <p class="text-slate-300">
+                            <strong>Upaya Mengatasi (Pengendalian Sosial):</strong><br>
+                            • <em>Preventif</em> (Pencegahan melalui sosialisasi & edukasi)<br>
+                            • <em>Represif</em> (Pemulihan ketertiban setelah pelanggaran)<br>
+                            • <em>Persuasif</em> (Ajakan tanpa kekerasan) & <em>Koersif</em> (Sanksi tegas hukum).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button onclick="closeModal('materiModal')" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs sm:text-sm">
+                    Siap Bermain!
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="setupModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden items-center justify-center p-3 sm:p-5">
+        <div class="bg-slate-900 border-2 border-sky-500/60 rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+                <h3 class="font-board text-xl text-white flex items-center gap-2">
+                    <i class="fa-solid fa-users-gear text-sky-400"></i> Pengaturan Tim & Kelas
+                </h3>
+                <button onclick="closeModal('setupModal')" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4 text-xs sm:text-sm">
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1.5">Jumlah Tim / Kelompok Siswa:</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setPlayerCount(2)" id="btnCount2" class="py-2 rounded-xl border font-bold transition">2 Kelompok</button>
+                        <button onclick="setPlayerCount(3)" id="btnCount3" class="py-2 rounded-xl border font-bold transition">3 Kelompok</button>
+                        <button onclick="setPlayerCount(4)" id="btnCount4" class="py-2 rounded-xl border font-bold transition">4 Kelompok</button>
+                    </div>
+                </div>
+
+                <div id="teamNamesInputs" class="space-y-2.5">
+                    <!-- Dynamic inputs -->
+                </div>
+
+                <div>
+                    <label class="block text-slate-300 font-semibold mb-1.5">Frekuensi Munculnya Kuis Sosiologi:</label>
+                    <select id="quizFreqSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-sky-400">
+                        <option value="all">Setiap Lemparan Dadu (Intensif Belajar)</option>
+                        <option value="special">Khusus Kotak Tangga, Ular & Kotak Kasus</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+                <button onclick="closeModal('setupModal')" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs sm:text-sm">Batal</button>
+                <button onclick="applyTeamSetup()" class="px-5 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs sm:text-sm shadow-lg">Simpan & Mulai Baru</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="winnerModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-slate-900 border-2 border-amber-400 rounded-3xl max-w-md w-full p-6 text-center shadow-2xl">
+            <div class="w-20 h-20 mx-auto rounded-full bg-amber-500/20 border-2 border-amber-400 flex items-center justify-center text-4xl text-amber-300 mb-4 animate-bounce">
+                <i class="fa-solid fa-trophy"></i>
+            </div>
+            <h3 class="font-board text-2xl sm:text-3xl text-white mb-1">SELAMAT! FINISH #36!</h3>
+            <p id="winnerSubText" class="text-amber-300 font-bold text-lg mb-4">Kelompok Durkheim Menang!</p>
+            <div id="finalStandingsBox" class="bg-slate-950 border border-slate-800 rounded-2xl p-3 mb-5 text-left space-y-2 text-xs sm:text-sm"></div>
+            <button onclick="resetGame()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-board text-lg shadow-lg hover:from-amber-300 hover:to-orange-400 transition">
+                Main Lagi Bersama Kelas
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* ============================================================================
+           1. EXACT BOARD CONFIGURATION (MATCHING REFERENCE IMAGE 6x6)
+           ============================================================================ */
+        const COLORS = {
+            green: '#8cc63f',
+            lblue: '#00a6e2',
+            dblue: '#0072bc',
+            purple: '#662d91',
+            magenta: '#d91c82',
+            red: '#ed1c24',
+            orange: '#f7941d',
+            yellow: '#fff200'
+        };
+
+        // Exact metadata for each tile 1..36 matching the uploaded reference image
+        const TILE_SPECS = {
+            1:  { color: COLORS.green,   pos: 'bl', outline: false, special: 'start' },
+            2:  { color: COLORS.lblue,   pos: 'tl', outline: false },
+            3:  { color: COLORS.dblue,   pos: 'br', outline: false },
+            4:  { color: COLORS.purple,  pos: 'br', outline: false },
+            5:  { color: COLORS.magenta, pos: 'bl', outline: false },
+            6:  { color: COLORS.red,     pos: 'bl', outline: false },
+            7:  { color: COLORS.purple,  pos: 'bl', outline: false },
+            8:  { color: COLORS.green,   pos: 'tl', outline: false },
+            9:  { color: COLORS.magenta, pos: 'br', outline: false },
+            10: { color: COLORS.red,     pos: 'tc', outline: false },
+            11: { color: COLORS.orange,  pos: 'bl', outline: true  },
+            12: { color: COLORS.yellow,  pos: 'br', outline: true  },
+            13: { color: COLORS.magenta, pos: 'ml', outline: false },
+            14: { color: COLORS.purple,  pos: 'tr', outline: false },
+            15: { color: COLORS.lblue,   pos: 'br', outline: false },
+            16: { color: COLORS.orange,  pos: 'tr', outline: true  },
+            17: { color: COLORS.yellow,  pos: 'ml', outline: true  },
+            18: { color: COLORS.magenta, pos: 'tr', outline: false },
+            19: { color: COLORS.dblue,   pos: 'br', outline: false },
+            20: { color: COLORS.lblue,   pos: 'bl', outline: false },
+            21: { color: COLORS.yellow,  pos: 'bl', outline: true  },
+            22: { color: COLORS.magenta, pos: 'tl', outline: false },
+            23: { color: COLORS.yellow,  pos: 'bl', outline: true  },
+            24: { color: COLORS.green,   pos: 'tl', outline: false },
+            25: { color: COLORS.lblue,   pos: 'tl', outline: false },
+            26: { color: COLORS.orange,  pos: 'bl', outline: true  },
+            27: { color: COLORS.dblue,   pos: 'tr', outline: false },
+            28: { color: COLORS.magenta, pos: 'tr', outline: false },
+            29: { color: COLORS.red,     pos: 'bl', outline: false },
+            30: { color: COLORS.yellow,  pos: 'tl', outline: true  },
+            31: { color: COLORS.purple,  pos: 'bl', outline: false },
+            32: { color: COLORS.orange,  pos: 'tr', outline: true  },
+            33: { color: COLORS.green,   pos: 'bl', outline: false },
+            34: { color: COLORS.lblue,   pos: 'tr', outline: false },
+            35: { color: COLORS.yellow,  pos: 'tr', outline: true  },
+            36: { color: COLORS.magenta, pos: 'br', outline: false, special: 'finish' }
+        };
+
+        // 5 Ladders (Tangga - Gejala Sosial Positif / Asosiatif)
+        const LADDERS = {
+            6:  { to: 18, title: 'Gotong Royong & Solidaritas Komunitas', desc: 'Masyarakat bahu-membahu membangun fasilitas literasi desa.' },
+            11: { to: 14, title: 'Inovasi UMKM Digital Lokal', desc: 'Pemanfaatan e-commerce meningkatkan kesejahteraan pengrajin daerah.' },
+            15: { to: 22, title: 'Toleransi Masyarakat Multikultural', desc: 'Dialog lintas budaya mencegah konflik horizontal di perkotaan.' },
+            21: { to: 28, title: 'Gerakan Ekologi & Bank Sampah', desc: 'Kesadaran kolektif warga berhasil mengatasi pencemaran lingkungan.' },
+            23: { to: 35, title: 'Beasiswa Inklusif & Mobilitas Sosial Naik', desc: 'Akses pendidikan merata mengangkat derajat sosial ekonomi warga.' }
+        };
+
+        // 5 Snakes (Ular - Masalah Sosial / Gejala Sosial Negatif)
+        const SNAKES = {
+            16: { to: 3,  title: 'Gaya Hidup Hedonisme & Konsumerisme', desc: 'Perilaku belanja impulsif demi gengsi media sosial memicu jeratan utang.' },
+            20: { to: 5,  title: 'Kenakalan Remaja & Tawuran Pelajar', desc: 'Gagalnya sosialisasi nilai dan norma memicu perilaku menyimpang.' },
+            25: { to: 12, title: 'Penyebaran Hoaks & Disinformasi Digital', desc: 'Kurangnya literasi digital memicu polarisasi dan konflik sosial.' },
+            31: { to: 19, title: 'Kemiskinan Struktural & Pengangguran', desc: 'Ketimpangan akses pelatihan kerja menghambat kesejahteraan masyarakat.' },
+            34: { to: 22, title: 'Kesenjangan Sosial Ekonomi Ekstrem', desc: 'Jurang pemisah antarkelas sosial memicu kecemburuan dan disintegrasi.' }
+        };
+
+        const SOCIOLOGY_QUESTIONS = [
+            {
+                category: "Karakteristik Gejala Sosial",
+                q: "Fenomena kemiskinan di perkotaan tidak hanya disebabkan oleh rendahnya pendapatan, tetapi juga terkait tingkat pendidikan, akses kesehatan, hingga pola pikir budaya. Hal ini membuktikan karakteristik gejala sosial yaitu...",
+                options: [
+                    "A. Bersifat universal dan seragam di setiap daerah",
+                    "B. Sangat kompleks dan saling berkaitan antar-aspek",
+                    "C. Mudah diprediksi menggunakan rumus eksak",
+                    "D. Bersifat statis dan tidak pernah berubah"
+                ],
+                correct: 1,
+                explanation: "Gejala sosial bersifat sangat kompleks karena perilaku dan peristiwa manusia dipengaruhi oleh berbagai faktor (ekonomi, budaya, pendidikan, psikologis) yang saling berkelindan."
+            },
+            {
+                category: "Faktor Penyebab Gejala Sosial",
+                q: "Sebagian warga di suatu wilayah terpencil enggan menyekolahkan anaknya ke jenjang SMA karena menganggap bekerja sejak dini lebih penting daripada pendidikan formal. Gejala sosial tersebut didorong oleh faktor...",
+                options: [
+                    "A. Faktor Kultural (Budaya)",
+                    "B. Faktor Struktural Pemerintah",
+                    "C. Faktor Geografis Alam Semata",
+                    "D. Faktor Biologis Keturunan"
+                ],
+                correct: 0,
+                explanation: "Faktor kultural merupakan nilai, keyakinan, dan kebiasaan yang tumbuh di dalam masyarakat itu sendiri, seperti pandangan hidup terhadap pendidikan."
+            },
+            {
+                category: "Faktor Penyebab Gejala Sosial",
+                q: "Pemerintah daerah melakukan program penyuluhan dan pelatihan keterampilan digital gratis sehingga angka pengangguran pemuda turun drastis. Perubahan ini merupakan contoh gejala sosial yang dipengaruhi oleh...",
+                options: [
+                    "A. Faktor Kultural",
+                    "B. Faktor Struktural",
+                    "C. Faktor Psikologis Individu",
+                    "D. Faktor Demografis Alami"
+                ],
+                correct: 1,
+                explanation: "Faktor struktural berkaitan dengan kebijakan institusi, pola hubungan formal, atau intervensi terstruktur seperti penyuluhan sosial dan regulasi publik."
+            },
+            {
+                category: "Ragam Gejala Sosial (Sorokin)",
+                q: "Alih fungsi hutan lindung menjadi kawasan industri tanpa analisis dampak lingkungan memicu banjir bandang yang merusak pemukiman warga. Menurut Pitirim A. Sorokin, peristiwa ini termasuk gejala sosial...",
+                options: [
+                    "A. Gejala Sosial Psikologis",
+                    "B. Gejala Sosial Lingkungan Alam",
+                    "C. Gejala Sosial Politik",
+                    "D. Gejala Sosial Kependudukan Murni"
+                ],
+                correct: 1,
+                explanation: "Kerusakan ekosistem dan bencana akibat perilaku manusia terhadap alam dikategorikan sebagai gejala sosial lingkungan alam."
+            },
+            {
+                category: "Gejala Sosial Budaya",
+                q: "Seorang siswa asal desa yang baru pindah ke kota metropolitan merasa bingung, cemas, dan canggung menghadapi gaya bicara serta ritme hidup masyarakat kota yang serba cepat. Fenomena ini dalam sosiologi disebut...",
+                options: [
+                    "A. Cultural Lag (Kesenjangan Budaya)",
+                    "B. Culture Shock (Gegar Budaya)",
+                    "C. Westernisasi Budaya",
+                    "D. Asimilasi Kultural"
+                ],
+                correct: 1,
+                explanation: "Culture Shock (Gegar Budaya) adalah guncangan psikologis dan sosial ketika seseorang berhadapan dengan lingkungan budaya baru yang sangat berbeda."
+            },
+            {
+                category: "Gejala Sosial Budaya",
+                q: "Masyarakat sudah memiliki smartphone canggih dengan akses internet berkecepatan tinggi, namun sebagian pengguna masih menggunakannya untuk menyebarkan fitnah dan melanggar etika ruang publik. Kondisi ketertinggalan budaya non-materiil dibanding budaya materiil disebut...",
+                options: [
+                    "A. Cultural Lag (Ketertinggalan Budaya)",
+                    "B. Cultural Survival",
+                    "C. Sekularisasi Sosial",
+                    "D. Difusi Kebudayaan"
+                ],
+                correct: 0,
+                explanation: "Menurut William F. Ogburn, Cultural Lag terjadi ketika perkembangan teknologi (budaya materiil) melaju lebih cepat daripada kesiapan mental, etika, dan aturan (budaya non-materiil)."
+            },
+            {
+                category: "Gejala Sosial Ekonomi",
+                q: "Kemiskinan yang dialami oleh sekelompok masyarakat karena keterbatasan akses terhadap modal, lapangan pekerjaan, dan kebijakan ekonomi yang kurang berpihak disebut...",
+                options: [
+                    "A. Kemiskinan Kultural",
+                    "B. Kemiskinan Struktural",
+                    "C. Kemiskinan Absolut Biologis",
+                    "D. Kemiskinan Sukarela"
+                ],
+                correct: 1,
+                explanation: "Kemiskinan struktural adalah kemiskinan yang disebabkan oleh tatanan sosial-ekonomi atau kebijakan yang membuat kelompok tertentu sulit mengakses sumber daya ekonomi."
+            },
+            {
+                category: "Gejala Sosial Modernisasi",
+                q: "Remaja membeli sepatu bermerek mahal bukan karena membutuhkannya untuk olahraga, melainkan hanya agar diakui oleh teman-teman pergaulannya di media sosial. Gejala sosial ini menunjukkan perilaku...",
+                options: [
+                    "A. Produktif dan Efisien",
+                    "B. Konsumerisme dan Hedonisme",
+                    "C. Nasionalisme Ekonomi",
+                    "D. Filantropi Sosial"
+                ],
+                correct: 1,
+                explanation: "Konsumerisme adalah gaya hidup yang membeli barang berdasarkan keinginan dan simbol status sosial, bukan berdasarkan nilai guna atau kebutuhan pokok."
+            },
+            {
+                category: "Pengendalian Sosial",
+                q: "Guru Bimbingan Konseling dan pihak kepolisian mengadakan seminar bahaya perundungan (bullying) serta narkoba kepada siswa kelas X sebelum terjadi pelanggaran. Upaya mengatasi gejala sosial negatif ini bersifat...",
+                options: [
+                    "A. Represif dan Koersif",
+                    "B. Preventif dan Persuasif",
+                    "C. Kuratif dan Menghukum",
+                    "D. Kompulsif Formal"
+                ],
+                correct: 1,
+                explanation: "Tindakan preventif dilakukan sebelum terjadi penyimpangan (pencegahan), sedangkan persuasif dilakukan melalui ajakan, bimbingan, dan edukasi tanpa paksaan fisik."
+            },
+            {
+                category: "Karakteristik Gejala Sosial",
+                q: "Cara masyarakat pesisir pantai dalam mengadakan syukuran hasil laut berbeda dengan cara masyarakat pegunungan dalam merayakan panen raya. Hal ini menunjukkan bahwa gejala sosial bersifat...",
+                options: [
+                    "A. Tidak bersifat universal (kontekstual)",
+                    "B. Statis dan baku",
+                    "C. Kuantitatif eksak",
+                    "D. Bebas nilai budaya"
+                ],
+                correct: 0,
+                explanation: "Gejala sosial tidak bersifat universal karena dipengaruhi oleh kondisi geografis, nilai, dan norma lokal masing-masing masyarakat."
+            },
+            {
+                category: "Tingkatan Gejala Sosial (Norman Blaikie)",
+                q: "Menurut Norman Blaikie, interaksi tatap muka sehari-hari antara pedagang dan pembeli di pasar tradisional termasuk ke dalam tingkatan gejala sosial...",
+                options: [
+                    "A. Gejala Sosial Mikro",
+                    "B. Gejala Sosial Meso",
+                    "C. Gejala Sosial Makro",
+                    "D. Gejala Sosial Global"
+                ],
+                correct: 0,
+                explanation: "Norman Blaikie membagi gejala sosial menjadi 3 tingkatan: Mikro (interaksi individu tatap muka), Meso (organisasi/komunitas), dan Makro (sistem masyarakat luas/negara)."
+            },
+            {
+                category: "Tingkatan Gejala Sosial (Norman Blaikie)",
+                q: "Perubahan regulasi perpajakan nasional dan kerja sama perdagangan bebas antarnegara ASEAN merupakan contoh gejala sosial pada tingkat...",
+                options: [
+                    "A. Gejala Sosial Mikro",
+                    "B. Gejala Sosial Meso",
+                    "C. Gejala Sosial Makro",
+                    "D. Gejala Sosial Interpersonal"
+                ],
+                correct: 2,
+                explanation: "Gejala sosial makro terjadi dalam skala besar yang melibatkan lembaga negara, sistem ekonomi nasional, hingga hubungan internasional."
+            },
+            {
+                category: "Masalah Sosial & Penyimpangan",
+                q: "Aksi pencurian data pribadi (phishing) dan peretasan akun perbankan semakin marak seiring pesatnya digitalisasi. Dalam kajian sosiologi, fenomena tersebut dikategorikan sebagai...",
+                options: [
+                    "A. Cybercrime (Kejahatan Siber)",
+                    "B. Konformitas Digital",
+                    "C. Mobilitas Horizontal",
+                    "D. Akulturasi Teknologi"
+                ],
+                correct: 0,
+                explanation: "Cybercrime adalah bentuk kejahatan atau perilaku menyimpang yang memanfaatkan teknologi komputer dan jaringan internet sebagai sarana utamanya."
+            },
+            {
+                category: "Peran Sosiologi",
+                q: "Sebelum merancang program pengentasan kemiskinan di desa tertinggal, tim sosiolog mengumpulkan data lapangan secara objektif mengenai mata pencaharian dan kendala warga. Dalam hal ini sosiologi berfungsi sebagai...",
+                options: [
+                    "A. Penelitian Sosial & Perencanaan Pembangunan",
+                    "B. Alat Propaganda Politik",
+                    "C. Hakim Moral Masyarakat",
+                    "D. Penentu Keuntungan Perusahaan"
+                ],
+                correct: 0,
+                explanation: "Sosiologi berperan penting dalam menyediakan data ilmiah (penelitian sosial) sebagai dasar perencanaan pembangunan dan pemecahan masalah sosial."
+            },
+            {
+                category: "Gejala Sosial Positif",
+                q: "Munculnya gerakan penggalangan dana daring (crowdfunding) oleh generasi muda untuk membantu korban bencana alam di daerah lain merupakan contoh gejala sosial yang berdampak...",
+                options: [
+                    "A. Memperkuat solidaritas dan empati sosial",
+                    "B. Memicu lunturnya jati diri bangsa",
+                    "C. Menimbulkan ketimpangan struktural",
+                    "D. Menghambat modernisasi masyarakat"
+                ],
+                correct: 0,
+                explanation: "Pemanfaatan teknologi untuk filantropi dan kemanusiaan merupakan gejala sosial positif yang memperkuat kohesi serta solidaritas sosial."
+            },
+            {
+                category: "Globalisasi & Budaya",
+                q: "Sikap meniru gaya hidup kebarat-baratan secara berlebihan seperti pergaulan bebas dan individualisme ekstrem tanpa menyaringnya dengan nilai Pancasila disebut...",
+                options: [
+                    "A. Modernisasi",
+                    "B. Westernisasi",
+                    "C. Sekularisme Positif",
+                    "D. Glokalisasi Budaya"
+                ],
+                correct: 1,
+                explanation: "Westernisasi adalah peniruan gaya hidup budaya Barat secara membabi buta, berbeda dengan modernisasi yang menekankan pola pikir rasional dan kemajuan iptek."
+            },
+            {
+                category: "Gejala Sosial Kependudukan",
+                q: "Perpindahan penduduk secara berbondong-bondong dari desa ke kota besar setelah musim panen usai untuk mencari pekerjaan di sektor informal disebut...",
+                options: [
+                    "A. Urbanisasi",
+                    "B. Transmigrasi",
+                    "C. Emigrasi",
+                    "D. Ruralisasi"
+                ],
+                correct: 0,
+                explanation: "Urbanisasi adalah perpindahan penduduk dari wilayah pedesaan ke perkotaan yang sering memicu gejala sosial baru seperti kepadatan pemukiman."
+            },
+            {
+                category: "Pengendalian Sosial",
+                q: "Lembaga sosial pertama dan paling utama dalam menanamkan nilai kejujuran, sopan santun, serta empati agar anak tidak terjerumus ke dalam kenakalan remaja adalah...",
+                options: [
+                    "A. Lembaga Keluarga",
+                    "B. Lembaga Politik",
+                    "C. Lembaga Ekonomi",
+                    "D. Lembaga Militer"
+                ],
+                correct: 0,
+                explanation: "Keluarga adalah agen sosialisasi primer tempat individu pertama kali mempelajari nilai dan norma dasar masyarakat."
+            },
+            {
+                category: "Karakteristik Gejala Sosial",
+                q: "Tren musik, gaya berpakaian remaja, dan pola komunikasi di media sosial berubah dengan sangat cepat dari tahun ke tahun. Hal ini mencerminkan karakteristik gejala sosial yaitu...",
+                options: [
+                    "A. Bersifat Dinamis",
+                    "B. Bersifat Statis",
+                    "C. Bersifat Monoton",
+                    "D. Bersifat Absolut"
+                ],
+                correct: 0,
+                explanation: "Gejala sosial bersifat dinamis karena masyarakat terus bergerak dan mengalami perubahan seiring interaksi serta perkembangan teknologi."
+            },
+            {
+                category: "Masalah Sosial",
+                q: "Menurut Soerjono Soekanto, suatu gejala sosial baru dapat disebut sebagai 'Masalah Sosial' apabila...",
+                options: [
+                    "A. Terjadi ketidaksesuaian antara unsur-unsur kebudayaan yang membahayakan kehidupan kelompok sosial",
+                    "B. Hanya dialami oleh satu orang secara pribadi di rumah",
+                    "C. Merupakan peristiwa alam murni yang tidak menyentuh manusia",
+                    "D. Membawa keuntungan ekonomi bagi seluruh lapisan warga"
+                ],
+                correct: 0,
+                explanation: "Masalah sosial adalah ketidaksesuaian antara harapan/nilai masyarakat dengan kenyataan yang merugikan banyak orang dan membutuhkan pemecahan kolektif."
+            }
+        ];
+
+        let soundEnabled = true;
+        let educationRuleMode = true; // true = quiz determines climbing ladder / avoiding snake
+        let quizFrequency = 'all'; // 'all' or 'special'
+        let playerCount = 2;
+        let currentPlayerIndex = 0;
+        let isAnimatingTurn = false;
+        let pendingPostQuizAction = null;
+
+        const DEFAULT_TEAMS = [
+            { name: "Tim Durkheim", color: "#f43f5e", bgClass: "bg-rose-500", icon: "fa-user-graduate" },
+            { name: "Tim Weber",    color: "#3b82f6", bgClass: "bg-blue-500", icon: "fa-lightbulb" },
+            { name: "Tim Karl Marx", color: "#10b981", bgClass: "bg-emerald-500", icon: "fa-scale-balanced" },
+            { name: "Tim Comte",    color: "#f59e0b", bgClass: "bg-amber-500", icon: "fa-globe" }
+        ];
+
+        let players = [];
+        let usedQuestionIndices = [];
+
+        // Web Audio API Sound Generator (Self-contained, no external MP3s needed)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playTone(freq, type = 'sine', duration = 0.12, delay = 0, vol = 0.15) {
+            if (!soundEnabled) return;
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime + delay);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + delay);
+                osc.stop(audioCtx.currentTime + delay + duration);
+            } catch (e) {
+                // Ignore audio errors on restricted devices
+            }
+        }
+
+        function sfxDice() {
+            for (let i = 0; i < 5; i++) {
+                playTone(220 + Math.random() * 260, 'triangle', 0.06, i * 0.06, 0.12);
+            }
+        }
+        function sfxStep() {
+            playTone(440, 'sine', 0.09, 0, 0.14);
+        }
+        function sfxLadder() {
+            [330, 392, 494, 587, 659].forEach((f, idx) => playTone(f, 'triangle', 0.14, idx * 0.09, 0.18));
+        }
+        function sfxSnake() {
+            [520, 440, 360, 290, 210].forEach((f, idx) => playTone(f, 'sawtooth', 0.15, idx * 0.09, 0.14));
+        }
+        function sfxCorrect() {
+            playTone(523.25, 'sine', 0.14, 0, 0.18);
+            playTone(659.25, 'sine', 0.18, 0.12, 0.18);
+            playTone(783.99, 'sine', 0.28, 0.24, 0.2);
+        }
+        function sfxWrong() {
+            playTone(280, 'sawtooth', 0.2, 0, 0.15);
+            playTone(210, 'sawtooth', 0.3, 0.18, 0.15);
+        }
+
+        // Convert tile number (1..36) to (row 0..5 from top, col 0..5 from left)
+        function getTileRowCol(tileNum) {
+            const zeroBased = tileNum - 1;
+            const rowFromBottom = Math.floor(zeroBased / 6); // 0..5
+            const row = 5 - rowFromBottom; // 0 is top row (36..31), 5 is bottom row (1..6)
+            const colInRow = zeroBased % 6;
+            const col = (rowFromBottom % 2 === 0) ? colInRow : (5 - colInRow);
+            return { row, col };
+        }
+
+        // Convert tile number (1..36) to percentage center (left%, top%)
+        function getTileCenterPercent(tileNum) {
+            const { row, col } = getTileRowCol(tileNum);
+            return {
+                left: (col * 100 / 6) + (100 / 12),
+                top: (row * 100 / 6) + (100 / 12)
+            };
+        }
+
+        // Build the 36 tiles visually matching the reference image
+        function renderBoardTiles() {
+            const grid = document.getElementById('tilesGrid');
+            grid.innerHTML = '';
+
+            for (let r = 0; r < 6; r++) {
+                for (let c = 0; c < 6; c++) {
+                    // Determine tile number for (r, c)
+                    const rowFromBottom = 5 - r;
+                    const num = (rowFromBottom % 2 === 0)
+                        ? (rowFromBottom * 6 + c + 1)
+                        : (rowFromBottom * 6 + (6 - c));
+
+                    const spec = TILE_SPECS[num];
+                    const cell = document.createElement('div');
+                    cell.className = 'relative border-[1.5px] border-white cursor-pointer transition hover:brightness-105 overflow-hidden';
+                    cell.style.backgroundColor = spec.color;
+                    cell.onclick = () => inspectTile(num);
+
+                    // Number positioning classes matching the exact reference image
+                    const posMap = {
+                        'tl': 'top-1.5 left-2',
+                        'tr': 'top-1.5 right-2',
+                        'tc': 'top-1.5 left-1/2 -translate-x-1/2',
+                        'bl': 'bottom-1.5 left-2',
+                        'br': 'bottom-1.5 right-2',
+                        'ml': 'top-1/2 -translate-y-1/2 left-2'
+                    };
+
+                    const numClass = spec.outline ? 'tile-num-outline' : 'tile-num-solid';
+
+                    if (spec.special === 'start') {
+                        cell.innerHTML = `
+                            <div class="absolute top-1 left-1.5 right-1.5 text-center">
+                                <div class="font-board text-white text-xs sm:text-base md:text-lg leading-none drop-shadow">Start</div>
+                                <svg viewBox="0 0 80 18" class="w-4/5 mx-auto mt-0.5">
+                                    <path d="M4 9 H62 M56 3 L70 9 L56 15 Z" stroke="white" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <span class="absolute bottom-1 left-2 ${numClass} text-lg sm:text-2xl md:text-3xl">${num}</span>
+                        `;
+                    } else if (spec.special === 'finish') {
+                        cell.innerHTML = `
+                            <div class="absolute top-1 left-1.5 right-1.5 text-center">
+                                <div class="font-board text-white text-xs sm:text-base md:text-lg leading-none drop-shadow">Finish</div>
+                                <svg viewBox="0 0 80 18" class="w-4/5 mx-auto mt-0.5">
+                                    <path d="M76 9 H18 M24 3 L10 9 L24 15 Z" stroke="white" stroke-width="2.5" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+                                </svg>
+                            </div>
+                            <span class="absolute bottom-1 right-2 ${numClass} text-lg sm:text-2xl md:text-3xl">${num}</span>
+                        `;
+                    } else {
+                        cell.innerHTML = `
+                            <span class="absolute ${posMap[spec.pos]} ${numClass} text-lg sm:text-2xl md:text-3xl">${num}</span>
+                        `;
+                    }
+
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function renderTokens() {
+            const layer = document.getElementById('tokensLayer');
+            layer.innerHTML = '';
+
+            // Group players by their current tile so overlapping tokens offset neatly
+            const tileGroups = {};
+            players.forEach((p, idx) => {
+                if (!tileGroups[p.position]) tileGroups[p.position] = [];
+                tileGroups[p.position].push({ player: p, index: idx });
+            });
+
+            players.forEach((p, idx) => {
+                const center = getTileCenterPercent(p.position);
+                const group = tileGroups[p.position];
+                const posInGroup = group.findIndex(item => item.index === idx);
+
+                // Offset slightly if multiple tokens share the same tile
+                const offsets = [
+                    { dx: 0, dy: 0 },
+                    { dx: -16, dy: -12 },
+                    { dx: 16, dy: 12 },
+                    { dx: -16, dy: 12 },
+                    { dx: 16, dy: -12 }
+                ];
+                const off = group.length === 1 ? offsets[0] : offsets[(posInGroup % 4) + 1];
+
+                const token = document.createElement('div');
+                token.id = `token-p-${idx}`;
+                const isActive = idx === currentPlayerIndex;
+                token.className = `absolute w-7 h-7 sm:w-9 sm:h-9 -ml-3.5 -mt-3.5 sm:-ml-4.5 sm:-mt-4.5 rounded-full flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-xl border-2 border-white transition-all duration-300 ${isActive ? 'token-active z-30 scale-110' : 'z-20 opacity-95'}`;
+                token.style.backgroundColor = p.color;
+                token.style.left = `calc(${center.left}% + ${off.dx}px)`;
+                token.style.top = `calc(${center.top}% + ${off.dy}px)`;
+                token.innerHTML = `<i class="fa-solid ${p.icon}"></i>`;
+                layer.appendChild(token);
+            });
+        }
+
+        function renderScoreboard() {
+            const container = document.getElementById('playersList');
+            container.innerHTML = '';
+
+            players.forEach((p, idx) => {
+                const isTurn = idx === currentPlayerIndex;
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-xl border transition flex items-center justify-between gap-2 ${
+                    isTurn
+                        ? 'bg-indigo-950/90 border-indigo-400 shadow-md shadow-indigo-500/10'
+                        : 'bg-slate-950/60 border-slate-800/90 opacity-85'
+                }`;
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <div class="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs border-2 border-white shrink-0" style="background:${p.color}">
+                            <i class="fa-solid ${p.icon}"></i>
+                        </div>
+                        <div class="truncate">
+                            <div class="font-bold text-xs sm:text-sm text-white truncate flex items-center gap-1.5">
+                                ${p.name}
+                                ${isTurn ? '<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>' : ''}
+                            </div>
+                            <div class="text-[11px] text-slate-400">Petak <strong class="text-amber-300">#${p.position}</strong></div>
+                        </div>
+                    </div>
+                    <div class="text-right shrink-0">
+                        <div class="font-board text-sm sm:text-base text-emerald-400">${p.score} <span class="text-[10px] font-sans text-slate-400">Poin</span></div>
+                        <div class="text-[10px] text-slate-400">${p.correctCount} Benar</div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+
+            // Update Current Turn Banner
+            const activePlayer = players[currentPlayerIndex];
+            if (activePlayer) {
+                document.getElementById('currentTurnName').textContent = activePlayer.name;
+                document.getElementById('currentTurnBadge').style.backgroundColor = activePlayer.color;
+            }
+        }
+
+        function renderDiceFace(value) {
+            const box = document.getElementById('diceVisual');
+            const pipCoords = {
+                1: [[50, 50]],
+                2: [[28, 28], [72, 72]],
+                3: [[28, 28], [50, 50], [72, 72]],
+                4: [[28, 28], [72, 28], [28, 72], [72, 72]],
+                5: [[28, 28], [72, 28], [50, 50], [28, 72], [72, 72]],
+                6: [[28, 24], [72, 24], [28, 50], [72, 50], [28, 76], [72, 76]]
+            };
+            const dots = (pipCoords[value] || pipCoords[6])
+                .map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="9" fill="${value === 1 ? '#e11d48' : '#1e293b'}"/>`)
+                .join('');
+
+            box.innerHTML = `
+                <svg viewBox="0 0 100 100" class="w-16 h-16">
+                    ${dots}
+                </svg>
+            `;
+        }
+
+        function addLog(htmlContent, borderColor = 'border-indigo-500') {
+            const log = document.getElementById('gameLog');
+            const item = document.createElement('div');
+            item.className = `p-2.5 rounded-lg bg-slate-900/90 border-l-4 ${borderColor} text-slate-200 leading-relaxed`;
+            item.innerHTML = htmlContent;
+            log.prepend(item);
+        }
+
+        function inspectTile(num) {
+            if (LADDERS[num]) {
+                const l = LADDERS[num];
+                addLog(`<strong class="text-amber-300"><i class="fa-solid fa-stairs mr-1"></i>Info Petak #${num} (Tangga → #${l.to}):</strong> ${l.title} — <em>${l.desc}</em>`, 'border-amber-400');
+            } else if (SNAKES[num]) {
+                const s = SNAKES[num];
+                addLog(`<strong class="text-rose-400"><i class="fa-solid fa-worm mr-1"></i>Info Petak #${num} (Ular → #${s.to}):</strong> ${s.title} — <em>${s.desc}</em>`, 'border-rose-500');
+            } else {
+                addLog(`<strong class="text-sky-300"><i class="fa-solid fa-location-dot mr-1"></i>Info Petak #${num}:</strong> Petak reguler eksplorasi konsep Gejala Sosial Kelas X Fase E.`, 'border-sky-400');
+            }
+        }
+
+        async function handleRollDice() {
+            if (isAnimatingTurn) return;
+            isAnimatingTurn = true;
+
+            const rollBtn = document.getElementById('rollDiceBtn');
+            const diceBox = document.getElementById('diceVisual');
+            rollBtn.disabled = true;
+            diceBox.classList.add('dice-rolling');
+            sfxDice();
+
+            // Shuffle dice animation
+            for (let i = 0; i < 7; i++) {
+                renderDiceFace(Math.floor(Math.random() * 6) + 1);
+                await new Promise(r => setTimeout(r, 65));
+            }
+
+            const diceValue = Math.floor(Math.random() * 6) + 1;
+            diceBox.classList.remove('dice-rolling');
+            renderDiceFace(diceValue);
+
+            const player = players[currentPlayerIndex];
+            document.getElementById('turnStatusText').innerHTML = `<strong class="text-amber-300">${player.name}</strong> mendapat angka dadu <strong>${diceValue}</strong>!`;
+            addLog(`🎲 <strong>${player.name}</strong> melempar dadu dan mendapat angka <strong>${diceValue}</strong>.`);
+
+            await movePlayerSteps(currentPlayerIndex, diceValue);
+        }
+
+        async function movePlayerSteps(pIdx, steps) {
+            const player = players[pIdx];
+            let direction = 1;
+
+            for (let s = 0; s < steps; s++) {
+                if (player.position === 36) {
+                    direction = -1; // Bounce back if exceeding 36
+                }
+                player.position += direction;
+                sfxStep();
+                renderTokens();
+                renderScoreboard();
+
+                const tokenEl = document.getElementById(`token-p-${pIdx}`);
+                if (tokenEl) tokenEl.classList.add('token-hopping');
+                await new Promise(r => setTimeout(r, 290));
+            }
+
+            const landedTile = player.position;
+
+            // Check if player reached Finish #36
+            if (landedTile === 36) {
+                player.score += 30;
+                renderScoreboard();
+                sfxCorrect();
+                showWinnerModal(player);
+                return;
+            }
+
+            // Check if landed on a Ladder, Snake, or Regular Tile
+            if (LADDERS[landedTile]) {
+                const ladder = LADDERS[landedTile];
+                triggerSociologyQuiz({
+                    type: 'ladder',
+                    tile: landedTile,
+                    targetTile: ladder.to,
+                    title: `Tangga Gejala Sosial Positif (#${landedTile} → #${ladder.to})`,
+                    subtitle: `${ladder.title}: ${ladder.desc}`
+                });
+            } else if (SNAKES[landedTile]) {
+                const snake = SNAKES[landedTile];
+                triggerSociologyQuiz({
+                    type: 'snake',
+                    tile: landedTile,
+                    targetTile: snake.to,
+                    title: `Ular Masalah Sosial (#${landedTile} → #${snake.to})`,
+                    subtitle: `${snake.title}: ${snake.desc}`
+                });
+            } else if (quizFrequency === 'all' || landedTile % 3 === 0) {
+                triggerSociologyQuiz({
+                    type: 'regular',
+                    tile: landedTile,
+                    targetTile: landedTile,
+                    title: `Kuis Pemahaman Gejala Sosial (Petak #${landedTile})`,
+                    subtitle: `Jawab dengan benar untuk menambah +10 Poin Sosiologi bagi kelompokmu!`
+                });
+            } else {
+                finishTurn();
+            }
+        }
+
+        function getNextQuestion() {
+            if (usedQuestionIndices.length >= SOCIOLOGY_QUESTIONS.length) {
+                usedQuestionIndices = [];
+            }
+            const available = SOCIOLOGY_QUESTIONS
+                .map((_, idx) => idx)
+                .filter(idx => !usedQuestionIndices.includes(idx));
+            const chosenIdx = available[Math.floor(Math.random() * available.length)];
+            usedQuestionIndices.push(chosenIdx);
+            return SOCIOLOGY_QUESTIONS[chosenIdx];
+        }
+
+        function triggerSociologyQuiz(context) {
+            const qObj = getNextQuestion();
+            const modal = document.getElementById('quizModal');
+            document.getElementById('quizCategoryBadge').textContent = qObj.category;
+            document.getElementById('quizTileBadge').textContent = `Petak #${context.tile}`;
+            document.getElementById('quizEventTitle').textContent = context.title;
+
+            const iconBox = document.getElementById('quizEventIcon');
+            if (context.type === 'ladder') {
+                iconBox.className = 'w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-xl shrink-0';
+                iconBox.innerHTML = '<i class="fa-solid fa-stairs"></i>';
+                document.getElementById('quizEventDesc').textContent = educationRuleMode
+                    ? `${context.subtitle} Jawab BENAR untuk naik ke Petak #${context.targetTile} (+20 Poin)!`
+                    : `${context.subtitle} Kamu naik ke Petak #${context.targetTile}! Jawab kuis untuk bonus +20 Poin.`;
+            } else if (context.type === 'snake') {
+                iconBox.className = 'w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-xl shrink-0';
+                iconBox.innerHTML = '<i class="fa-solid fa-worm"></i>';
+                document.getElementById('quizEventDesc').textContent = educationRuleMode
+                    ? `${context.subtitle} Jawab BENAR untuk melakukan Pengendalian Sosial (Selamat dari ular +15 Poin)!`
+                    : `${context.subtitle} Pion turun ke Petak #${context.targetTile}. Jawab kuis untuk memulihkan +15 Poin!`;
+            } else {
+                iconBox.className = 'w-10 h-10 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center text-xl shrink-0';
+                iconBox.innerHTML = '<i class="fa-solid fa-graduation-cap"></i>';
+                document.getElementById('quizEventDesc').textContent = context.subtitle;
+            }
+
+            document.getElementById('quizQuestionText').textContent = qObj.q;
+
+            // Render options
+            const optContainer = document.getElementById('quizOptionsContainer');
+            optContainer.innerHTML = '';
+            qObj.options.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-3.5 rounded-xl bg-slate-800/90 hover:bg-indigo-950/80 border border-slate-700 hover:border-indigo-400 text-xs sm:text-sm text-slate-100 font-medium transition flex items-center justify-between gap-2';
+                btn.innerHTML = `<span>${optText}</span><i class="fa-regular fa-circle text-slate-400"></i>`;
+                btn.onclick = () => evaluateQuizAnswer(idx, qObj, context, btn);
+                optContainer.appendChild(btn);
+            });
+
+            document.getElementById('quizFeedbackBox').classList.add('hidden');
+            document.getElementById('quizContinueBtn').classList.add('hidden');
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function evaluateQuizAnswer(selectedIdx, qObj, context, clickedBtn) {
+            const player = players[currentPlayerIndex];
+            const isCorrect = selectedIdx === qObj.correct;
+            const buttons = document.getElementById('quizOptionsContainer').querySelectorAll('button');
+
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === qObj.correct) {
+                    btn.className = 'w-full text-left p-3.5 rounded-xl bg-emerald-950/90 border-2 border-emerald-400 text-xs sm:text-sm text-emerald-200 font-bold flex items-center justify-between gap-2';
+                    btn.querySelector('i').className = 'fa-solid fa-circle-check text-emerald-400';
+                } else if (idx === selectedIdx && !isCorrect) {
+                    btn.className = 'w-full text-left p-3.5 rounded-xl bg-rose-950/90 border-2 border-rose-500 text-xs sm:text-sm text-rose-200 font-bold flex items-center justify-between gap-2';
+                    btn.querySelector('i').className = 'fa-solid fa-circle-xmark text-rose-400';
+                } else {
+                    btn.classList.add('opacity-50');
+                }
+            });
+
+            const feedbackBox = document.getElementById('quizFeedbackBox');
+            const feedbackTitle = document.getElementById('quizFeedbackTitle');
+            const explanationText = document.getElementById('quizExplanationText');
+
+            feedbackBox.classList.remove('hidden');
+            explanationText.innerHTML = `<strong>Pembahasan Sosiologis:</strong> ${qObj.explanation}`;
+
+            if (isCorrect) {
+                sfxCorrect();
+                player.correctCount++;
+                if (context.type === 'ladder') {
+                    player.score += 20;
+                    feedbackBox.className = 'rounded-2xl p-4 mb-4 bg-emerald-950/80 border border-emerald-500/60';
+                    feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-emerald-300">Jawaban Tepat! (+20 Poin & Naik Tangga ke #${context.targetTile})</span>`;
+                    pendingPostQuizAction = { moveTo: context.targetTile, effect: 'ladder', logMsg: `🪜 <strong>${player.name}</strong> menjawab benar dan naik Tangga dari <strong>#${context.tile} → #${context.targetTile}</strong> (+20 Poin).` };
+                } else if (context.type === 'snake') {
+                    player.score += 15;
+                    feedbackBox.className = 'rounded-2xl p-4 mb-4 bg-emerald-950/80 border border-emerald-500/60';
+                    if (educationRuleMode) {
+                        feedbackTitle.innerHTML = `<i class="fa-solid fa-shield-heart text-emerald-400"></i> <span class="text-emerald-300">Pengendalian Sosial Berhasil! (+15 Poin & Lolos dari Ular!)</span>`;
+                        pendingPostQuizAction = { moveTo: context.tile, effect: 'none', logMsg: `🛡️ <strong>${player.name}</strong> berhasil melakukan mitigasi masalah sosial di <strong>#${context.tile}</strong> dan terhindar dari ular (+15 Poin)!` };
+                    } else {
+                        feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-emerald-300">Jawaban Benar (+15 Poin), namun aturan klasik tetap turun ke #${context.targetTile}.</span>`;
+                        pendingPostQuizAction = { moveTo: context.targetTile, effect: 'snake', logMsg: `🐍 <strong>${player.name}</strong> turun ular dari <strong>#${context.tile} → #${context.targetTile}</strong> namun meraih +15 Poin kuis.` };
+                    }
+                } else {
+                    player.score += 10;
+                    feedbackBox.className = 'rounded-2xl p-4 mb-4 bg-emerald-950/80 border border-emerald-500/60';
+                    feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> <span class="text-emerald-300">Analisis Sosiologi Tepat! (+10 Poin)</span>`;
+                    pendingPostQuizAction = { moveTo: context.tile, effect: 'none', logMsg: `✅ <strong>${player.name}</strong> menjawab kuis dengan tepat di Petak <strong>#${context.tile}</strong> (+10 Poin).` };
+                }
+            } else {
+                sfxWrong();
+                if (context.type === 'ladder') {
+                    feedbackBox.className = 'rounded-2xl p-4 mb-4 bg-rose-950/80 border border-rose-500/60';
+                    if (educationRuleMode) {
+                        feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> <span class="text-rose-300">Kurang Tepat! Batal menaiki tangga & tetap di #${context.tile}.</span>`;
+                        pendingPostQuizAction = { moveTo: context.tile, effect: 'none', logMsg: `⚠️ <strong>${player.name}</strong> belum tepat menjawab kuis sehingga gagal menaiki tangga di Petak <strong>#${context.tile}</strong>.` };
+                    } else {
+                        feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> <span class="text-rose-300">Jawaban Kurang Tepat (0 Poin), naik tangga klasik ke #${context.targetTile}.</span>`;
+                        pendingPostQuizAction = { moveTo: context.targetTile, effect: 'ladder', logMsg: `🪜 <strong>${player.name}</strong> naik tangga ke <strong>#${context.targetTile}</strong> tanpa bonus poin.` };
+                    }
+                } else if (context.type === 'snake') {
+                    player.score = Math.max(0, player.score - 5);
+                    feedbackBox.className = 'rounded-2xl p-4 mb-4 bg-rose-950/80 border border-rose-500/60';
+                    feedbackTitle.innerHTML = `<i class="fa-solid fa-worm text-rose-400"></i> <span class="text-rose-300">Kurang Tepat! Terdampak Masalah Sosial & turun ke Petak #${context.targetTile} (-5 Poin).</span>`;
+                    pendingPostQuizAction = { moveTo: context.targetTile, effect: 'snake', logMsg: `🐍 <strong>${player.name}</strong> terkena dampak masalah sosial dan meluncur turun dari <strong>#${context.tile} → #${context.targetTile}</strong> (-5 Poin).` };
+                } else {
+                    feedbackBox.className = 'rounded-2xl p-4 mb-4 bg-rose-950/80 border border-rose-500/60';
+                    feedbackTitle.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i> <span class="text-rose-300">Jawaban Kurang Tepat! Simak pembahasannya ya.</span>`;
+                    pendingPostQuizAction = { moveTo: context.tile, effect: 'none', logMsg: `📖 <strong>${player.name}</strong> mempelajari pembahasan konsep Gejala Sosial di Petak <strong>#${context.tile}</strong>.` };
+                }
+            }
+
+            renderScoreboard();
+            document.getElementById('quizContinueBtn').classList.remove('hidden');
+        }
+
+        async function closeQuizAndProceed() {
+            const modal = document.getElementById('quizModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+
+            const player = players[currentPlayerIndex];
+            if (pendingPostQuizAction) {
+                addLog(pendingPostQuizAction.logMsg, pendingPostQuizAction.effect === 'ladder' ? 'border-amber-400' : (pendingPostQuizAction.effect === 'snake' ? 'border-rose-500' : 'border-emerald-500'));
+
+                if (pendingPostQuizAction.moveTo !== player.position) {
+                    if (pendingPostQuizAction.effect === 'ladder') sfxLadder();
+                    if (pendingPostQuizAction.effect === 'snake') sfxSnake();
+                    player.position = pendingPostQuizAction.moveTo;
+                    renderTokens();
+                    renderScoreboard();
+                    await new Promise(r => setTimeout(r, 450));
+                }
+                pendingPostQuizAction = null;
+            }
+
+            finishTurn();
+        }
+
+        function finishTurn() {
+            currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+            isAnimatingTurn = false;
+            document.getElementById('rollDiceBtn').disabled = false;
+            renderTokens();
+            renderScoreboard();
+            const nextPlayer = players[currentPlayerIndex];
+            document.getElementById('turnStatusText').innerHTML = `Giliran <strong class="text-white">${nextPlayer.name}</strong> untuk melempar dadu.`;
+        }
+
+        function openModal(id) {
+            const m = document.getElementById(id);
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+
+        function closeModal(id) {
+            const m = document.getElementById(id);
+            m.classList.add('hidden');
+            m.classList.remove('flex');
+        }
+
+        function copyMasterPrompt() {
+            const text = document.getElementById('masterPromptText').innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textarea);
+
+            const msg = document.getElementById('copyConfirmMsg');
+            msg.classList.remove('opacity-0');
+            setTimeout(() => msg.classList.add('opacity-0'), 3000);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('soundIcon');
+            icon.className = soundEnabled ? 'fa-solid fa-volume-high text-emerald-400' : 'fa-solid fa-volume-xmark text-rose-400';
+        }
+
+        function toggleRuleMode() {
+            educationRuleMode = !educationRuleMode;
+            const badge = document.getElementById('ruleModeBadge');
+            if (educationRuleMode) {
+                badge.innerHTML = '<i class="fa-solid fa-shield-halved mr-1"></i> Mode Edukasi (Aktif)';
+                badge.className = 'mt-1 px-2.5 py-1 rounded-lg bg-indigo-500/20 hover:bg-indigo-500/30 border border-indigo-400/40 text-indigo-200 text-xs font-semibold transition';
+            } else {
+                badge.innerHTML = '<i class="fa-solid fa-dice mr-1"></i> Mode Klasik (Aktif)';
+                badge.className = 'mt-1 px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/40 text-amber-200 text-xs font-semibold transition';
+            }
+        }
+
+        function setPlayerCount(count) {
+            playerCount = count;
+            [2, 3, 4].forEach(n => {
+                const btn = document.getElementById(`btnCount${n}`);
+                btn.className = (n === count)
+                    ? 'py-2 rounded-xl border border-sky-400 bg-sky-500/20 text-sky-200 font-bold transition'
+                    : 'py-2 rounded-xl border border-slate-700 bg-slate-950 text-slate-400 font-bold transition';
+            });
+            renderTeamInputs();
+        }
+
+        function renderTeamInputs() {
+            const box = document.getElementById('teamNamesInputs');
+            box.innerHTML = '';
+            for (let i = 0; i < playerCount; i++) {
+                const currentName = players[i] ? players[i].name : DEFAULT_TEAMS[i].name;
+                box.innerHTML += `
+                    <div class="flex items-center gap-2">
+                        <span class="w-4 h-4 rounded-full shrink-0" style="background:${DEFAULT_TEAMS[i].color}"></span>
+                        <input id="teamNameInput${i}" type="text" value="${currentName}" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white text-xs sm:text-sm focus:outline-none focus:border-sky-400" placeholder="Nama Kelompok ${i + 1}">
+                    </div>
+                `;
+            }
+        }
+
+        function applyTeamSetup() {
+            quizFrequency = document.getElementById('quizFreqSelect').value;
+            players = [];
+            for (let i = 0; i < playerCount; i++) {
+                const inputEl = document.getElementById(`teamNameInput${i}`);
+                const nameVal = inputEl && inputEl.value.trim() ? inputEl.value.trim() : DEFAULT_TEAMS[i].name;
+                players.push({
+                    name: nameVal,
+                    color: DEFAULT_TEAMS[i].color,
+                    icon: DEFAULT_TEAMS[i].icon,
+                    position: 1,
+                    score: 0,
+                    correctCount: 0
+                });
+            }
+            closeModal('setupModal');
+            resetPositionsAndLogs();
+        }
+
+        function showWinnerModal(winner) {
+            document.getElementById('winnerSubText').textContent = `${winner.name} Mencapai Garis Finish (#36)!`;
+            const standings = [...players].sort((a, b) => b.score - a.score);
+            const box = document.getElementById('finalStandingsBox');
+            box.innerHTML = standings.map((p, i) => `
+                <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900">
+                    <span class="font-bold text-white">#${i + 1} ${p.name} (Petak #${p.position})</span>
+                    <span class="font-board text-emerald-400">${p.score} Poin (${p.correctCount} Benar)</span>
+                </div>
+            `).join('');
+            openModal('winnerModal');
+        }
+
+        function resetGameConfirm() {
+            resetGame();
+        }
+
+        function resetGame() {
+            closeModal('winnerModal');
+            players.forEach(p => {
+                p.position = 1;
+                p.score = 0;
+                p.correctCount = 0;
+            });
+            resetPositionsAndLogs();
+        }
+
+        function resetPositionsAndLogs() {
+            currentPlayerIndex = 0;
+            isAnimatingTurn = false;
+            document.getElementById('rollDiceBtn').disabled = false;
+            renderDiceFace(6);
+            renderTokens();
+            renderScoreboard();
+            document.getElementById('gameLog').innerHTML = '';
+            addLog(`🎓 <strong>Permainan Dimulai!</strong> Semua kelompok berada di Petak <strong>#1 (Start)</strong>. Lempar dadu dan analisis fenomena Gejala Sosial Kelas X Fase E!`, 'border-emerald-400');
+        }
+
+        // Initialize on Window Load
+        window.onload = function () {
+            players = DEFAULT_TEAMS.slice(0, 2).map(t => ({
+                name: t.name,
+                color: t.color,
+                icon: t.icon,
+                position: 1,
+                score: 0,
+                correctCount: 0
+            }));
+            renderBoardTiles();
+            setPlayerCount(2);
+            resetPositionsAndLogs();
+        };
+    </script>
+</body>
+</html>
